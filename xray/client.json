@@ -1,0 +1,178 @@
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "inbound-proxy-socks",
+          "inbound-proxy-http"
+        ],
+        "domain": [
+          "geosite:category-ads-all"
+        ],
+        "outboundTag": "outbound-block"
+      },
+      {
+        "type": "field",
+        "inboundTag": [
+          "inbound-proxy-socks",
+          "inbound-proxy-http"
+        ],
+        "ip": [
+          "206.190.238.147/32",
+          "223.5.5.5/32",
+          "223.6.6.6/32",
+          "119.29.29.29/32",
+          "180.76.76.76/32",
+          "114.114.114.114/32",
+          "geoip:private",
+          "geoip:cn"
+        ],
+        "outboundTag": "outbound-direct"
+      },
+      {
+        "type": "field",
+        "inboundTag": [
+          "inbound-proxy-socks",
+          "inbound-proxy-http"
+        ],
+        "domain": [
+          "icloud.com.cn",
+          "geosite:category-games@cn"
+        ],
+        "outboundTag": "outbound-direct"
+      },
+      {
+        "type": "field",
+        "inboundTag": [
+          "inbound-proxy-socks",
+          "inbound-proxy-http"
+        ],
+        "domain": [
+          "apple.com",
+          "protobuf.dev",
+          "openai.com",
+          "binance.com",
+          "mstdn.one",
+          "iso.org",
+          "gnu.org",
+          "wxw.moe",
+          "mastonaut.app",
+          "mstdn.social",
+          "fosstodon.org",
+          "languagereactor.com",
+          "dioco.io",
+          "geosite:geolocation-!cn"
+        ],
+        "outboundTag": "outbound-proxy"
+      },
+      {
+        "type": "field",
+        "inboundTag": [
+          "inbound-proxy-socks",
+          "inbound-proxy-http"
+        ],
+        "ip": [
+          "1.1.1.1/32",
+          "1.0.0.1/32",
+          "8.8.8.8/32",
+          "8.8.4.4/32",
+          "geoip:jp",
+          "geoip:us",
+          "geoip:ca",
+          "geoip:telegram"
+        ],
+        "outboundTag": "outbound-proxy"
+      },
+      {
+        "type": "field",
+        "inboundTag": [
+          "inbound-proxy-socks",
+          "inbound-proxy-http"
+        ],
+        "outboundTag": "outbound-direct"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "tag": "inbound-proxy-socks",
+      "port": 8888,
+      "listen": "127.0.0.1",
+      "protocol": "socks",
+      "settings": {
+        "udp": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+            "http",
+            "tls",
+            "quic"
+        ],
+        "routeOnly": true
+      }
+    },
+    {
+      "tag": "inbound-proxy-http",
+      "port": 9999,
+      "listen": "127.0.0.1",
+      "protocol": "http",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+            "http",
+            "tls",
+            "quic"
+        ],
+        "routeOnly": true
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "outbound-direct",
+      "protocol": "freedom"
+    },
+    {
+      "tag": "outbound-block",
+      "protocol": "blackhole"
+    },
+    {
+      "tag": "outbound-proxy",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "",
+            "port": 443,
+            "users": [
+              {
+                "id": "",//execute "xray uuid" to generate
+                "flow": "xtls-rprx-vision",
+                "encryption": "none",
+                "level": 0
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "fingerprint": "chrome", 
+          "serverName": "",
+          "publicKey": "",//execute "xray x25519" to generate
+          "spiderX": "",
+          "shortId": ""
+        }
+      }
+    }
+  ]
+}
